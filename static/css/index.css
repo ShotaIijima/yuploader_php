@@ -1,0 +1,15 @@
+#upload-form {
+  margin: 20px;
+}
+
+#upload-form div {
+  margin: 10px;
+}
+
+#upload-form input[name="url"]{
+  width: 500px;
+}
+
+#upload-form input[name="seller"]{
+  width: 350px;
+}

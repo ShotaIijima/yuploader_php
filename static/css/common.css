@@ -1,0 +1,28 @@
+.items {
+	padding: 30px;
+}
+
+.items img {
+	width: 350px;
+	height: 350px;
+}
+
+.error_list {
+	padding: 10px 30px;
+    margin: 30px;
+	color: red;
+	font-size: 86%;
+	text-align: left;
+	border: 1px solid red;
+	border-radius: 5px;
+}
+
+.info_list {
+	padding: 10px 30px;
+    margin: 30px;
+	color: green;
+	font-size: 86%;
+	text-align: left;
+	border: 1px solid green;
+	border-radius: 5px;
+}
