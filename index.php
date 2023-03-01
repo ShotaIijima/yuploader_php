@@ -17,4 +17,7 @@ include(__DIR__ . '/lib/header.php');
 include(__DIR__ . '/lib/navbar.php');
 include(__DIR__ . '/lib/form.php');
 include(__DIR__ . '/lib/form_script.php');
+include(__DIR__ . '/lib/funcs_script.php');
+include(__DIR__ . '/lib/search_script.php');
+include(__DIR__ . '/lib/upload_item_script.php');
 include(__DIR__ . '/lib/footer.php');

@@ -141,6 +141,7 @@ class EbaySearcher extends Searcher {
             }*/
             // $item = $imageEl->find("img");
             $src = $imageEl->getAttribute("src");
+            $src = str_replace('s-l64', 's-l500', $src);
             _debug($src);
             /*$tmp2 = explode('/', $src);
             $tmp2[count($tmp2) - 1] = $fileName;

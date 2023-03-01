@@ -3,3 +3,4 @@ log/*
 static/dl_imgs/*
 static/img/*
 php_errors.log
+.vscode/*

@@ -57,11 +57,15 @@ class Searcher {
                 }
             }
             foreach($rms['imgs'] as $key => $img) {
+                if ($key >= 20) continue;
                 $dir = __DIR__ . "/../static/dl_imgs/" . $rms['item_code'];
                 mkdir($dir);
                 $data = file_get_contents($img);
                 $pathinfo = pathinfo($img);
-                $filename = $dir . '/' . $rms['item_code'] . '_' . $key . '.' . $pathinfo["extension"];
+                if ($key === 0)
+                    $filename = $dir . '/' . $rms['item_code'] . '.' . $pathinfo["extension"];
+                else
+                    $filename = $dir . '/' . $rms['item_code'] . '_' . $key . '.' . $pathinfo["extension"];
                 file_put_contents($filename, $data);
                 if ($logo_width != null) {
                     // 画像合成

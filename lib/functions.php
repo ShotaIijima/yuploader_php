@@ -11,6 +11,7 @@ $SUFFS = [
 
 function init_yuploader()
 {
+    error_reporting(0);
     define("YUPLOADER_APP_HOME", __DIR__ . '/..');
     define("YUPLOADER_LOG_FILE", YUPLOADER_APP_HOME . '/log/yuploader' . date('Ymd') . '.log');
     define("YUPLOADER_DEBUG", true);
@@ -43,7 +44,7 @@ function require_logined_session()
                 "redirect_to" => "/login.php"
             ]);
         } else {
-            header('Location: /login.php', true, 302);
+            header('Location: /login.php');
         }
         exit;
     }
@@ -176,4 +177,24 @@ function makeRandStr($length) {
 function res_json($arr) {
     $resarr = $arr == NULL ? [] : $arr;
     return json_encode($resarr);
+}
+
+function get_additional1($lower_item_code, $imgs_cnt) {
+    $res = '<div style="text-align:center">';
+    for ($i=0; $i<$imgs_cnt; $i++) {
+        $res .= '<img src = "https://item-shopping.c.yimg.jp/i/n/primopasso_' . $lower_item_code;
+        if ($i > 0) {
+            $res .= '_' . strval($i);
+        }
+        $res .= '"><br><br>';
+    }
+    $res .= '</div>';
+}
+
+function get_options($options) {
+    if ($options == null || $options === '') {
+        return '';
+    } else {
+        return $options . '|【重要】納期についてご確認ください#取寄せの為　10-30日程度かかります。|【重要】発送についてご確認ください#海外買付検品後　国内から発送いたします。|【重要】海外の最新在庫状況を確認の上ご連絡いたします。#残念ながら在庫のない場合キャンセルの可能性がございます。';
+    }
 }

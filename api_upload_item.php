@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/lib/functions.php';
-require_once __DIR__ . '/lib/searcher.php';
+require_once __DIR__ . '/lib/yahoo_service.php';
 init_yuploader();
 require_logined_session();
 
@@ -17,13 +17,18 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 logging(var_export($_POST, true));
 
+$datas = [];
+
+foreach ($_POST['datas'] as $data) {
+    if (in_array($data['name'], ['price'], true)) {
+        $data['value'] = intval($data['value']);
+    }
+    $datas[$data['name']] = $data['value'];
+}
+
 $ys = YahooService::get_instance();
-$ys->upload_item();
+$res1 = $ys->upload_item($datas, $_POST['imgs']);
 
-$ress = Searcher::do_search($_POST['store_id']);
+echo res_json(null);
 
-logging("==========rmss==========");
-logging(var_export($ress, true));
-logging("==========rmss==========");
-
-echo res_json($ress);
+return;
