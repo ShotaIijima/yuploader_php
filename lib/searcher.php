@@ -63,9 +63,10 @@ class Searcher {
                 $data = file_get_contents($img);
                 $pathinfo = pathinfo($img);
                 if ($key === 0)
-                    $filename = $dir . '/' . $rms['item_code'] . '.' . $pathinfo["extension"];
+                    $target = $rms['item_code'] . '.' . $pathinfo["extension"];
                 else
-                    $filename = $dir . '/' . $rms['item_code'] . '_' . $key . '.' . $pathinfo["extension"];
+                    $target = $rms['item_code'] . '_' . $key . '.' . $pathinfo["extension"];
+                $filename = $dir . '/' . $target;
                 file_put_contents($filename, $data);
                 if ($logo_width != null) {
                     // 画像合成
@@ -77,7 +78,7 @@ class Searcher {
                     }
                 }
                 // JSONレスポンスに返却する形式
-                $res_filepath = sprintf("/static/dl_imgs/%s/%s_%s.%s", $rms['item_code'], $rms['item_code'], $key, $pathinfo["extension"]);
+                $res_filepath = sprintf("/static/dl_imgs/%s/%s", $rms['item_code'], $target);
                 $rms['imgs'][$key] = $res_filepath;
             }
             $rms['additional2'] = $this->get_additional2();

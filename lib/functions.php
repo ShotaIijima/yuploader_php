@@ -106,7 +106,7 @@ function db_connect()
     // DBへ接続
     try {
         if ($DBH == null) {
-          include(__DIR__ . '/../conf/db.php');
+          include(YUPLOADER_APP_HOME . '/conf/db.php');
           $DBH = new PDO($DBCONF['dsn'], $DBCONF['user'], $DBCONF['pass']);
         }
     } catch(PDOException $e) {

@@ -19,12 +19,17 @@ logging(var_export($_POST, true));
 
 $datas = [];
 
-foreach ($_POST['datas'] as $data) {
+foreach ($_POST['datas'] as &$data) {
     if (in_array($data['name'], ['price'], true)) {
         $data['value'] = intval($data['value']);
     }
     $datas[$data['name']] = $data['value'];
 }
+
+logging(var_export($datas, true));
+echo res_json(null);
+
+return;
 
 $ys = YahooService::get_instance();
 $res1 = $ys->upload_item($datas, $_POST['imgs']);

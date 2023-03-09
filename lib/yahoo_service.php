@@ -101,7 +101,7 @@ class YahooService {
         return $response;
     }
 
-    public function publish($datas)
+    public function publish()
     {
         $path = sprintf("%s/reservePublish", self::API_PATH);
         $header = [
@@ -130,13 +130,47 @@ class YahooService {
         return $response;
     }
 
-    public function regist_all_images($datas)
+    public function regist_all_images($data)
     {
-        foreach ($datas as $key => $data) {
-            $dl_img = __DIR__ . "/../static/dl_imgs/" . $data['item_code'];
-            $zip_img = __DIR__ . "/../static/zip_imgs/" . $data['item_code'] . '.zip';
+        $dl_img = YUPLOADER_APP_HOME . "/static/dl_imgs/" . $data['item_code'] . '/*';
+        $zip_img = YUPLOADER_APP_HOME . "/static/zip_imgs/" . $data['item_code'] . '.zip';
+        $zip = new ZipArchive;
+        if($zip->open($zip_img, ZipArchive::CREATE)=== TRUE){
+            foreach (glob($dl_img) as $original) {
+                $zip->addFile($original, basename($original));
+            }
+            $zip->close();
+        }else{
+            logging("zip圧縮に失敗しました");
+            return null;
         }
+
+        $path = sprintf("%s/uploadItemImagePack", self::API_PATH);
+        $header = [
+            sprintf("POST %s HTTP/1.1", $path),
+            'Host: ' . self::BASE_HOST,
+            'Authorization: Bearer ' . $this->access_token,
+            'Content-Type: multipart/form-data'
+        ];
         
+        $url = self::BASE_URL . $path;
+        $param = array(
+            'seller_id' => self::SELLER_ID,
+            'file' => base64_encode(file_get_contents($zip_img))
+        );
+        
+        // 必要に応じてオプションを追加してください。
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST,  'POST');
+        curl_setopt($ch, CURLOPT_HTTPHEADER,     $header);
+        curl_setopt($ch, CURLOPT_URL,            $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST,           true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS,     $param);
+        
+        $response = curl_exec($ch);
+        curl_close($ch);
+        return $response;
     }
 
     public function get_cates()
