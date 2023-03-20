@@ -11,6 +11,19 @@ function set_success_result(str) {
   set_search_result(str, "green");
 }
 
+function set_each_upload_result(item_code, str, color) {
+  $('#' + item_code + '_upload_result').css("color", color);
+  $('#' + item_code + '_upload_result').text(str);
+}
+
+function set_each_success_result(item_code, str) {
+  set_each_upload_result(item_code, str, "green");
+}
+
+function set_each_error_result(item_code, str) {
+  set_each_upload_result(item_code, str, "red");
+}
+
 function img_prev(item_code) {
   var imgs = $('#' + item_code).find("img");
   for (var i=0; i<imgs.length; i++) {
@@ -64,4 +77,11 @@ function init_results() {
       ress[i].remove();
     }
   }
+}
+
+function delete_item(item_code) {
+  $('#' + item_code).remove();
+  var item_codes = JSON.parse(localStorage.getItem('item_codes'));
+  item_codes.splice(item_codes.indexOf(item_code), 1);
+  localStorage.setItem('item_codes', JSON.stringify(item_codes));
 }

@@ -42,6 +42,8 @@ function add_results(data) {
   .val($('input[name="brand_code_id"]').val());
   item_node.find('.upitem')
   .attr('onClick', 'upload_item(\'' + data['item_code'] + '\')');
+  item_node.find('.del_item')
+  .attr('onClick', 'delete_item(\'' + data['item_code'] + '\')');
   item_node.find('#TEMPLATEITEMCODE_loader')
   .attr('id', data['item_code'] + '_loader');
   item_node.find('#TEMPLATEITEMCODE_imgs')
@@ -75,6 +77,7 @@ function search() {
   localStorage.setItem('product_cate_id', $('select[name="product_cate_id"]').val());
   localStorage.setItem('brand_code_id', $('select[name="brand_code_id"]').val());
   init_results();
+  set_success_result("");
   $('#search_loader').css("display", "block");
   $.ajax({
     type: "POST",
@@ -88,13 +91,21 @@ function search() {
       console.log('redirect_to: ' + data["redirect_to"]);
       window.location.href = data["redirect_to"];
     }
+    if (data["error"]) {
+      console.log(data["error"]);
+      set_error_result(data["error"]);
+      return;
+    }
     console.log(data);
     if (data.length > 0) {
       $('#results').css("display", "block");
       set_success_result(data.length + "件取得しました。");
+      var item_codes = [];
       for (var j=0; j<data.length; j++) {
         add_results(data[j]);
+        item_codes[j] = data[j]['item_code'];
       }
+      localStorage.setItem('item_codes', JSON.stringify(item_codes));
     } else {
       set_error_result("結果は0件でした。");
     }

@@ -12,6 +12,7 @@ $SUFFS = [
 function init_yuploader()
 {
     error_reporting(0);
+    
     define("YUPLOADER_APP_HOME", __DIR__ . '/..');
     define("YUPLOADER_LOG_FILE", YUPLOADER_APP_HOME . '/log/yuploader' . date('Ymd') . '.log');
     define("YUPLOADER_DEBUG", true);
@@ -39,13 +40,13 @@ function require_logined_session()
     @session_start();
     // ログインしていなければ /login.php に遷移
     if (!isset($_SESSION['user'])) {
-        if (str_starts_with($_SERVER["REQUEST_URI"], '/api_')) {
-            echo json_encode([
-                "redirect_to" => "/login.php"
-            ]);
-        } else {
+        //if (str_starts_with($_SERVER["REQUEST_URI"], '/api_')) {
+        //    echo json_encode([
+        //        "redirect_to" => "/login.php"
+        //    ]);
+        //} else {
             header('Location: /login.php');
-        }
+        //}
         exit;
     }
 }

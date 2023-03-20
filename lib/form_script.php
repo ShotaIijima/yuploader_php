@@ -11,18 +11,34 @@ var item_attrs = [
 ];
 
 window.addEventListener('load', (event) => {
-  $('select[name="cate_id"]').select2({
+  let cate_id_select = $('#upload-form select[name="cate_id"]').clone();
+  cate_id_select.appendTo('#results .select-cate_id');
+  let path_id_select = $('#upload-form select[name="path_id"]').clone();
+  path_id_select.appendTo('#results .select-path_id');
+  /*$('upload-form select[name="cate_id"]').select2({
     language: "ja"
   });
-  $('select[name="path_id"]').select2({
+  $('upload-form select[name="path_id"]').select2({
     language: "ja"
   });
-  $('select[name="product_cate_id"]').select2({
+  $('upload-form select[name="product_cate_id"]').select2({
     language: "ja"
   });
-  $('select[name="brand_code_id"]').select2({
+  $('upload-form select[name="brand_code_id"]').select2({
     language: "ja"
   });
+  $('results select[name="cate_id"]').select2({
+    language: "ja"
+  });
+  $('results select[name="path_id"]').select2({
+    language: "ja"
+  });
+  $('results select[name="product_cate_id"]').select2({
+    language: "ja"
+  });
+  $('results select[name="brand_code_id"]').select2({
+    language: "ja"
+  });*/
   console.log('ページが完全に読み込まれました');
   // ページ読み込み時に実行したい処理
   var store_id = localStorage.getItem('store_id');

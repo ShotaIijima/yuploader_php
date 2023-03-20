@@ -44,6 +44,10 @@ class Searcher {
             $rms['imgs'] = $this->get_images();
             _debug('rms: imgs: ');
             _debug_obj($rms['imgs']);
+            if (count($rms['imgs']) === 0) {
+                logging("count imgs is zero. : " . $rms['item_code']);
+                continue;
+            }
             $logow = null;
             $logoh = null;
             if (is_checkbox_on('combine_logo')) {
@@ -68,7 +72,7 @@ class Searcher {
                     $target = $rms['item_code'] . '_' . $key . '.' . $pathinfo["extension"];
                 $filename = $dir . '/' . $target;
                 file_put_contents($filename, $data);
-                if ($logo_width != null) {
+                if ($logow != null) {
                     // 画像合成
                     if (($im = @imagecreatefromstring($data)) !== false) {
                         imagecopy($im, $logoim, 10, 10, 0, 0, $logow, $logoh);
@@ -97,6 +101,9 @@ class Searcher {
         while($row = $calc_st->fetch(PDO::FETCH_ASSOC)){
             $this->calc_rules[] = $row;
         }
+        if (count($this->calc_rules) === 0) {
+            logging("ERROR: failed to get calc_rules");
+        }
     }
 
     public function calc_kakaku($original) {
@@ -108,7 +115,7 @@ class Searcher {
                 return $original * $calc_rule['bai'] + $calc_rule['tasu'];
             }
         }
-        return 0;
+        return $original;
     }
 
     protected function make_doc($url) {

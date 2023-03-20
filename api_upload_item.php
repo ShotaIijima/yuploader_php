@@ -27,12 +27,53 @@ foreach ($_POST['datas'] as &$data) {
 }
 
 logging(var_export($datas, true));
-echo res_json(null);
-
-return;
 
 $ys = YahooService::get_instance();
+
 $res1 = $ys->upload_item($datas, $_POST['imgs']);
+$res1_xml = simplexml_load_string($res1);
+if ($res1_xml->Message) {
+    echo res_json([
+        'error' => strval($res1_xml->Message)
+    ]);
+    exit(1);
+}
+
+if (strval($res1_xml->Result->Status) === 'NG') {
+    $errors = [];
+    foreach ($res1_xml->Result->Error as $error) {
+        $errors[] = $error->Message[0];
+    }
+    echo res_json([
+        'error' => implode(',', $errors)
+    ]);
+    exit(2);
+}
+
+$res2 = $ys->regist_all_images($datas, $_POST['imgs']);
+$res2_xml = simplexml_load_string($res2);
+if ($res2_xml->Message) {
+    echo res_json([
+        'error' => strval($res2_xml->Message)
+    ]);
+    exit(1);
+}
+
+if (strval($res2_xml->Result->Status) === 'NG') {
+    $errors = [];
+    foreach ($res2_xml->Result->Error as $error) {
+        $errors[] = $error->Message[0];
+    }
+    echo res_json([
+        'error' => implode(',', $errors)
+    ]);
+    exit(2);
+}
+
+logging(var_export($res1, true));
+logging(var_export($res1_xml, true));
+logging(var_export($res2, true));
+logging(var_export($res2_xml, true));
 
 echo res_json(null);
 

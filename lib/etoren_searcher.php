@@ -11,8 +11,8 @@ class EtorenSearcher extends Searcher {
     public function get_result_url() {
         if (is_checkbox_on('get_by_search')) {
             $this->make_doc($_POST['url']);
-            foreach ($this->doc->find('.item-title') as $key => $value) {
-                $url = $this->doc->find(".item-title:eq($key) a")->getAttribute('href');
+            foreach ($this->doc->find('.lt-image') as $key => $value) {
+                $url = $value->getAttribute('href');
                 $this->urls[] = $url;
             }
         } else {

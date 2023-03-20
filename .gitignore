@@ -1,6 +1,7 @@
 conf/*
 log/*
 static/dl_imgs/*
+static/zip_imgs/*
 static/img/*
 php_errors.log
 .vscode/*

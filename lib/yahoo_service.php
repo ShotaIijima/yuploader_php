@@ -30,7 +30,7 @@ class YahooService {
 
     public function upload_item($datas, $imgs)
     {
-        $path = sprintf("%s/editItem", self::API_PATH);
+        $path = sprintf("%s/editItem?seller_id=%s", self::API_PATH, self::SELLER_ID);
         $header = [
             sprintf("POST %s HTTP/1.1", $path),
             'Host: ' . self::BASE_HOST,
@@ -41,9 +41,10 @@ class YahooService {
         $param = array(
             'seller_id' => self::SELLER_ID,
             'item_code' => $datas['edit_item_code'],
+            'path' => $datas['path_id'],
             'price' => $datas['price'],
+            'product_category' => $datas['product_cate_id'],
             'name' => $datas['name'],
-            'path' => $datas['path'],
             'explanation' => $datas['name'] . "\n\n〜Import store NAIA〜\n店長が厳選した海外ブランドのお品を直輸入\n国内では手に入らない限定商品も\n安心の国内発送　検品の上お手元へお送りいたします。\n\n海外から直輸入の為、お届けまでに10-30日程度お時間いただきます。\n\nオススメ セレクト ブランド 今季フェイスブック Facebook Twitter ツイッター  \n海外 直輸入 店長 インスタ　インスタグラム Instagram  トレンド 人気\n流行 商品 レア定番 限定 有名ブロガー ブログ 掲載商品 誕生日 プレゼント ギフト",
             'additional1' => get_additional1(
                 strtolower($datas['item_code']),
@@ -62,17 +63,24 @@ class YahooService {
         curl_setopt($ch, CURLOPT_URL,            $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST,           true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS,     $param);
+        curl_setopt($ch, CURLOPT_POSTFIELDS,     http_build_query($param));
         
         $response = curl_exec($ch);
         curl_close($ch);
+        if ($response !== false) {
+            // レスポンスを確認
+            logging(__FUNCTION__ . ' : ' . __LINE__);
+            logging(var_export($response, true));
+            logging(__FUNCTION__ . ' : ' . __LINE__);
+        }
+
         return $response;
     }
 
     
     public function set_stock($datas)
     {
-        $path = sprintf("%s/setStock", self::API_PATH);
+        $path = sprintf("%s/setStock?seller_id=%s", self::API_PATH, self::SELLER_ID);
         $header = [
             sprintf("POST %s HTTP/1.1", $path),
             'Host: ' . self::BASE_HOST,
@@ -94,7 +102,7 @@ class YahooService {
         curl_setopt($ch, CURLOPT_URL,            $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST,           true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS,     $param);
+        curl_setopt($ch, CURLOPT_POSTFIELDS,     http_build_query($param));
         
         $response = curl_exec($ch);
         curl_close($ch);
@@ -103,7 +111,7 @@ class YahooService {
 
     public function publish()
     {
-        $path = sprintf("%s/reservePublish", self::API_PATH);
+        $path = sprintf("%s/reservePublish?seller_id=%s", self::API_PATH, self::SELLER_ID);
         $header = [
             sprintf("POST %s HTTP/1.1", $path),
             'Host: ' . self::BASE_HOST,
@@ -112,7 +120,6 @@ class YahooService {
         
         $url = self::BASE_URL . $path;
         $param = array(
-            'seller_id' => self::SELLER_ID,
             'mode' => '1'
         );
         
@@ -123,16 +130,51 @@ class YahooService {
         curl_setopt($ch, CURLOPT_URL,            $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST,           true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS,     $param);
+        curl_setopt($ch, CURLOPT_POSTFIELDS,     http_build_query($param));
         
         $response = curl_exec($ch);
         curl_close($ch);
+        if ($response !== false) {
+            // レスポンスを確認
+            logging(__FUNCTION__ . ' : ' . __LINE__);
+            logging(var_export($response, true));
+            logging(__FUNCTION__ . ' : ' . __LINE__);
+        }
         return $response;
     }
 
-    public function regist_all_images($data)
+    public function regist_all_images($data, $imgs)
     {
+        // まずはimgのURLパスから、ファイル名を取り出す
+        $target_imgs = [];
+        foreach($imgs as $img) {
+            $pathinfo = pathinfo($img);
+            $target_imgs[] = $pathinfo['basename'];
+        }
         $dl_img = YUPLOADER_APP_HOME . "/static/dl_imgs/" . $data['item_code'] . '/*';
+        $img_count = 0;
+        foreach (glob($dl_img) as $original) {
+            // 削除された画像を消します。
+            $original_pathinfo = pathinfo($original);
+            if (! in_array($original_pathinfo['basename'], $target_imgs)) {
+                // 削除された画像だったら、サーバからも削除
+                unlink($original);
+            } else {
+                // あった場合
+                if ($img_count === 0) {
+                    rename(
+                        $original,
+                        YUPLOADER_APP_HOME . "/static/dl_imgs/" . $data['item_code'] . '/' . $data['item_code'] . '.' . $original_pathinfo["extension"]
+                    );
+                } else {
+                    rename(
+                        $original,
+                        YUPLOADER_APP_HOME . "/static/dl_imgs/" . $data['item_code'] . '/' . $data['item_code'] . '_' . $img_count . '.' . $original_pathinfo["extension"]
+                    );
+                }
+                $img_count++;
+            }
+        }
         $zip_img = YUPLOADER_APP_HOME . "/static/zip_imgs/" . $data['item_code'] . '.zip';
         $zip = new ZipArchive;
         if($zip->open($zip_img, ZipArchive::CREATE)=== TRUE){
@@ -145,7 +187,7 @@ class YahooService {
             return null;
         }
 
-        $path = sprintf("%s/uploadItemImagePack", self::API_PATH);
+        $path = sprintf("%s/uploadItemImagePack?seller_id=%s", self::API_PATH, self::SELLER_ID);
         $header = [
             sprintf("POST %s HTTP/1.1", $path),
             'Host: ' . self::BASE_HOST,
@@ -155,8 +197,7 @@ class YahooService {
         
         $url = self::BASE_URL . $path;
         $param = array(
-            'seller_id' => self::SELLER_ID,
-            'file' => base64_encode(file_get_contents($zip_img))
+            'file' => new CURLFile($zip_img)
         );
         
         // 必要に応じてオプションを追加してください。
@@ -170,6 +211,12 @@ class YahooService {
         
         $response = curl_exec($ch);
         curl_close($ch);
+        if ($response !== false) {
+            // レスポンスを確認
+            logging(__FUNCTION__ . ' : ' . __LINE__);
+            logging(var_export($response, true));
+            logging(__FUNCTION__ . ' : ' . __LINE__);
+        }
         return $response;
     }
 
