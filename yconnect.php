@@ -22,6 +22,7 @@ $client_secret = $_SESSION['user']['secret'];
 // 各パラメータ初期化
 // $redirect_uri = "https://store.shopping.yahoo.co.jp/primopasso/";
 $redirect_uri = "http://localhost:8080/yconnect.php";
+// $redirect_uri = "https://shiijima.com/yconnect.php";
 
 // リクエストとコールバック間の検証用のランダムな文字列を指定してください
 $state = "44Oq44Ki5YWF44Gr5L+644Gv44Gq44KL77yB";

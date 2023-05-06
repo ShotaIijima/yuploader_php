@@ -69,9 +69,7 @@ class YahooService {
         curl_close($ch);
         if ($response !== false) {
             // レスポンスを確認
-            logging(__FUNCTION__ . ' : ' . __LINE__);
             logging(var_export($response, true));
-            logging(__FUNCTION__ . ' : ' . __LINE__);
         }
 
         return $response;

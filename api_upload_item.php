@@ -50,6 +50,9 @@ if (strval($res1_xml->Result->Status) === 'NG') {
     exit(2);
 }
 
+logging(var_export($res1, true));
+logging(var_export($res1_xml, true));
+
 $res2 = $ys->regist_all_images($datas, $_POST['imgs']);
 $res2_xml = simplexml_load_string($res2);
 if ($res2_xml->Message) {
@@ -70,10 +73,20 @@ if (strval($res2_xml->Result->Status) === 'NG') {
     exit(2);
 }
 
-logging(var_export($res1, true));
-logging(var_export($res1_xml, true));
 logging(var_export($res2, true));
 logging(var_export($res2_xml, true));
+
+$res3 = $ys->set_stock($datas);
+$res3_xml = simplexml_load_string($res3);
+if ($res3_xml->Error) {
+    echo res_json([
+        'error' => strval($res2_xml->Error)
+    ]);
+    exit(1);
+}
+
+logging(var_export($res3, true));
+logging(var_export($res3_xml, true));
 
 echo res_json(null);
 

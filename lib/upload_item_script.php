@@ -26,12 +26,7 @@ function upload_item(item_code) {
       set_each_error_result(item_code, data["error"]);
       return;
     }
-    console.log(data);
-    if (data.length > 0) {
-      set_each_success_result(item_code, item_code + ": しました。");
-    } else {
-      set_each_error_result(item_code, "結果は0件でした。");
-    }
+    set_each_success_result(item_code, item_code + ": アップロード完了しました。");
   }).fail(function(jqXHR, textStatus, errorThrown) {
     // 失敗時
     console.log('execute failed: ' + textStatus);
