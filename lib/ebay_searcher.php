@@ -16,7 +16,8 @@ class EbaySearcher extends Searcher {
                 $searchresultpage = $_POST['url'];
             }
             $this->make_doc($searchresultpage);
-            foreach ($this->doc->find('.vip') as $youso) {
+            // foreach ($this->doc->find('.vip') as $youso) {
+            foreach ($this->doc->find('.s-item__link') as $youso) {
                 $url = $youso->getAttribute('href');
                 $this->urls[] = $url;
             }
