@@ -59,7 +59,8 @@ class EtorenSearcher extends Searcher {
             return null;
         }
         foreach($opts1 as $key => $opt) {
-            $tmp = $this->_doc_find(".variation-product option:eq($key)")->text();
+            $origin = $this->_doc_find(".variation-product option:eq($key)")->text();
+            $tmp = trim($origin);
             $tmp = str_replace([
                 ",",
                 "text-warning",

@@ -79,11 +79,13 @@ class EbaySearcher extends Searcher {
         $arr2 = [];
         $opts2 = $this->_doc_find('#x-msku__select-box-1001 option');
         foreach($opts1 as $key => $opt) {
-            $arr1[] = $this->_doc_find("#x-msku__select-box-1000 option:eq($key)")->text();
+            $orig = $this->_doc_find("#x-msku__select-box-1000 option:eq($key)")->text();
+            $arr1[] = trim($orig);
         }
         if ($opts2 != null) {
             foreach($opts2 as $key => $opt) {
-                $arr2[] = $this->_doc_find("#x-msku__select-box-1001 option:eq($key)")->text();
+                $orig = $this->_doc_find("#x-msku__select-box-1001 option:eq($key)")->text();
+                $arr2[] = trim($orig);
             }
         }
         if (count($arr1) > 0) {
