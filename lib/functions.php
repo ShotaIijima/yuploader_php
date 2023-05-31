@@ -3,6 +3,7 @@
 $DBH = null;
 
 $SUFFS = [
+    "png",
     "jpg",
     "gif",
     "jpe",

@@ -4,7 +4,6 @@
 require_once __DIR__ . '/searcher.php';
 
 class EbaySearcher extends Searcher {
-    protected $urls = [];
     protected $rms = [];
     protected $item_code_pref = "YEB";
 

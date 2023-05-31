@@ -9,6 +9,7 @@ require_once __DIR__ . '/etoren_searcher.php';
 class Searcher {
     protected $calc_rules = [];
     protected $url = null;
+    protected $urls = [];
     protected $doc = null;
     protected $name = null;
     protected $price = null;
